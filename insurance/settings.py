@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'webpack_loader',
     'catalog',
     'rest_framework',
     'rest_framework_jwt',
@@ -85,6 +86,13 @@ REST_FRAMEWORK = {
   'DEFAULT_AUTHENTICATION_CLASSES': (
     'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
   ),
+}
+
+WEBPACK_LOADER = {
+  'DEFAULT': {
+    'BUNDLE_DIR_NAME': '',
+    'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.json'),
+  }
 }
 
 # Database

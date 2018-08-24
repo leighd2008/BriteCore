@@ -19,7 +19,7 @@ export default class AuthService {
   auth0 = new auth0.WebAuth({
     domain: 'leighd2008.auth0.com',
     clientID: 'vTdl7dRZhoolf0BsWXMoFdrb2ivV93I4',
-    redirectUri: 'http://localhost:8080/',
+    redirectUri: 'http://localhost:8000/',
     audience: 'https://insuranceapi.com',
     responseType: 'token id_token',
     scope: 'openid profile'
