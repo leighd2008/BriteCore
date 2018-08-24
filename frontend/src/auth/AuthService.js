@@ -1,4 +1,5 @@
 import auth0 from 'auth0-js'
+import { AUTH_CONFIG } from './auth0-variables'
 import EventEmitter from 'eventemitter3'
 import router from './../router'
 
@@ -11,15 +12,14 @@ export default class AuthService {
     this.setSession = this.setSession.bind(this)
     this.logout = this.logout.bind(this)
     this.isAuthenticated = this.isAuthenticated.bind(this)
-    this.handleAuthentication = this.handleAuthentication.bind(this)
   }
 
   // create an instance of auth0.WebAuth with your
   // API and Client credentials
   auth0 = new auth0.WebAuth({
-    domain: 'leighd2008.auth0.com',
-    clientID: 'vTdl7dRZhoolf0BsWXMoFdrb2ivV93I4',
-    redirectUri: 'http://localhost:8000/',
+    domain: AUTH_CONFIG.domain,
+    clientID: AUTH_CONFIG.clientId,
+    redirectUri: AUTH_CONFIG.callbackUrl,
     audience: 'https://insuranceapi.com',
     responseType: 'token id_token',
     scope: 'openid profile'
@@ -37,11 +37,12 @@ export default class AuthService {
     this.auth0.parseHash((err, authResult) => {
       if (authResult && authResult.accessToken && authResult.idToken) {
         this.setSession(authResult)
+        router.replace('/')
       } else if (err) {
+        router.replace('/')
         console.log(err)
         alert(`Error: ${err.error}. Check the console for further details.`)
       }
-      router.replace('/')
     })
   }
 
@@ -55,7 +56,7 @@ export default class AuthService {
     localStorage.setItem('access_token', authResult.accessToken)
     localStorage.setItem('id_token', authResult.idToken)
     localStorage.setItem('expires_at', expiresAt)
-    this.authNotifier.emit('authChange', {authenticated: true})
+    this.authNotifier.emit('authChange', { authenticated: true })
   }
 
   // remove the access and ID tokens from the
@@ -82,9 +83,14 @@ export default class AuthService {
     return localStorage.getItem('access_token')
   }
 
+  static authenticated(){
+    let expiresAt = JSON.parse(localStorage.getItem('expires_at'))
+    return new Date().getTime() < expiresAt
+  }
+
   // a method to get the User profile
   getUserProfile (cb) {
-    const accessToken = localStorage.getItem('access_token')
+    var accessToken = localStorage.getItem('access_token')
     if (accessToken) return this.auth0.client.userInfo(accessToken, cb)
     else return null
   }

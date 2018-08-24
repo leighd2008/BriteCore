@@ -16,13 +16,16 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.views.generic import TemplateView
+from django.views.generic import RedirectView
 from django.conf.urls import url
 
 from catalog import views
 
 urlpatterns = [
-    url(r'^api/public/', views.public),
-    url(r'^api/private/', views.private),
-    url(r'^$', TemplateView.as_view(template_name='index.html'), name='index'),    
+    url(r'^$', TemplateView.as_view(template_name='index.html'), name='index'),
+    url(r'^api/products/$', views.product_list),
+    url(r'^api/products/(?P<pk>[0-9]+)$', views.product_detail),
     path('admin/', admin.site.urls),
+    url(r'^(?:.*)/?$', TemplateView.as_view(template_name='index.html'), name='catchall'),
+
 ]

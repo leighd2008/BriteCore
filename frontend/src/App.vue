@@ -1,81 +1,82 @@
 <template>
-  <div>
-    <button
-      class="btn btn-primary btn-margin"
-      v-if="!authenticated"
-      @click="login()">
-      Log In
-    </button>
+<div>
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+      <a class="navbar-brand" href="#">Django - Auth0 - Vue</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul class="navbar-nav mr-auto">
 
-    <button
-      class="btn btn-primary btn-margin"
-      v-if="authenticated"
-      @click="privateMessage()">
-      Call Private
-    </button>
+          <li class="nav-item">
+          <a class="btn btn-primary" href="/">Home</a>
+          </li>
+          <li class="nav-item">
+          <a class="btn btn-primary" href="/product-list">Products</a>
+          </li>
+          <li class="nav-item">
+          <a class="btn btn-primary" href="/product-create">Create</a>
+          </li>
 
-    <button
-      class="btn btn-primary btn-margin"
-      v-if="authenticated"
-      @click="logout()">
-      Log Out
-    </button>
-    {{message}}
-    <br>
-  </div>
+        </ul>
+          <button
+            class="btn btn-primary btn-margin"
+            v-if="!authenticated"
+            @click="login()">
+              Log In
+          </button>
+
+          <button
+            class="btn btn-primary btn-margin"
+            v-if="authenticated"
+            @click="logout()">
+              Log Out
+          </button>
+
+      </div>
+    </nav>
+
+    <div class="container">
+      <router-view
+        :auth="auth"
+        :authenticated="authenticated">
+      </router-view>
+    </div>
+
+</div>
 </template>
 
 <script>
+
 import AuthService from './auth/AuthService'
-import axios from 'axios'
-
-const API_URL = 'http://localhost:8000'
 const auth = new AuthService()
-
+const { login, logout, authenticated, authNotifier } = auth
 export default {
   name: 'app',
   data () {
-    this.handleAuthentication()
-    this.authenticated = false
-
-    auth.authNotifier.on('authChange', authState => {
+    authNotifier.on('authChange', authState => {
       this.authenticated = authState.authenticated
     })
-
     return {
-      authenticated: false,
-      message: ''
+      auth,
+      authenticated
     }
   },
   methods: {
-    // this method calls the AuthService login() method
-    login () {
-      auth.login()
-    },
-    handleAuthentication () {
-      auth.handleAuthentication()
-    },
-    logout () {
-      auth.logout()
-    },
-    privateMessage () {
-      const url = `${API_URL}/api/private/`
-      return axios.get(url, {headers: {Authorization: `Bearer ${AuthService.getAuthToken()}`}}).then((response) => {
-        console.log(response.data)
-        this.message = response.data || ''
-      })
-    }
+    login,
+    logout
   }
 }
 </script>
 
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+@import './assets/bootstrap.min.css';
+body {
+  min-height: 75rem;
+  padding-top: 4.5rem;
+}
+.nav-item{
+  padding:1px;
+  margin-left: 5px;
 }
 </style>
