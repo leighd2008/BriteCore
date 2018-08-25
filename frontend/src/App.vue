@@ -47,7 +47,6 @@
 </template>
 
 <script>
-
 import AuthService from './auth/AuthService'
 const auth = new AuthService()
 const { login, logout, authenticated, authNotifier } = auth

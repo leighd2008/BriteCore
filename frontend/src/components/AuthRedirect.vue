@@ -1,24 +1,25 @@
 <template>
-  <div class="spinner" v-if="loading">
+  <div class="spinner">
     <img src="../assets/loading.svg" alt="loading"/>
   </div>
 </template>
 
 <script>
 /* eslint-disable */
-export default {
-  name: 'Loading',
-  props: ['loading'],
-  data () {
+  export default {
+    name: 'AuthRedirect',
+    props: ['auth'],
+    data () {
+      if(!auth.isAuthenticated()){
+          this.$router.go('/')
+      }
+
       return {}
+    }
   }
-}
 </script>
 
 <style>
-    h1{
-        color: black;
-    }
   .spinner {
     position: absolute;
     display: flex;

@@ -18,13 +18,13 @@ const routes = [
     path: '/product-list',
     name: 'ProductList',
     component: ProductList,
-    meta: { requiresAuth : true }
+    meta: { requiresAuth: true }
   },
   {
     path: '/product-create',
     name: 'ProductCreate',
     component: ProductCreate,
-    meta: { requiresAuth : true }
+    meta: { requiresAuth: true }
   },
   {
     path: '/product-update/:pk',
@@ -42,27 +42,23 @@ const router = new Router({
   routes
 })
 
-//const auth = new AuthService()
+// const auth = new AuthService()
 
 router.beforeEach((to, from, next) => {
   console.log('routing ', from, AuthService.authenticated())
-  if(to.meta.requiresAuth)
-  {
-    if(!AuthService.authenticated())
-    {
-      next('/');
+  if (to.meta.requiresAuth) {
+    if (!AuthService.authenticated()) {
+      next('/')
     }
   }
   next()
 })
 
-export function authGuard(to, from, next) {
-
-  if(!AuthService.authenticated()){
-    next('/');
+export function authGuard (to, from, next) {
+  if (!AuthService.authenticated()) {
+    next('/')
   }
   next()
-
 }
 
 export default router

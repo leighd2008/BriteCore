@@ -83,7 +83,7 @@ export default class AuthService {
     return localStorage.getItem('access_token')
   }
 
-  static authenticated(){
+  static authenticated () {
     let expiresAt = JSON.parse(localStorage.getItem('expires_at'))
     return new Date().getTime() < expiresAt
   }
